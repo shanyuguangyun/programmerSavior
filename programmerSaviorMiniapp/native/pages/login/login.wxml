@@ -1,0 +1,23 @@
+<view class="wrap">
+  <view class="brand">
+    <view class="brand-icon">救</view>
+    <text class="brand-title">评论管理</text>
+    <text class="brand-sub">码农自救 · 管理端</text>
+  </view>
+
+  <view class="form">
+    <view class="field">
+      <text class="field-label">账号</text>
+      <input class="input" value="{{username}}" placeholder="请输入管理员账号" bindinput="onUsername" />
+    </view>
+    <view class="field">
+      <text class="field-label">密码</text>
+      <input class="input" value="{{password}}" password="{{true}}" placeholder="请输入密码" bindinput="onPassword" confirm-type="done" bindconfirm="submit" />
+    </view>
+
+    <button class="btn" loading="{{loading}}" bindtap="submit">登录</button>
+
+    <text class="hint" wx:if="{{mockMode}}">Mock 环境账号：admin / 123456</text>
+    <text class="hint" wx:else>连接后端接口，使用你的管理员账号登录</text>
+  </view>
+</view>

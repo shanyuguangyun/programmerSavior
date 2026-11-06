@@ -1,0 +1,23 @@
+{
+  "name": "码农自救·管理端",
+  "appid": "",
+  "description": "文章评论与浏览数据管理小程序",
+  "versionName": "1.0.0",
+  "versionCode": "100",
+  "vueVersion": "3",
+  "h5": {
+    "title": "管理端",
+    "router": {
+      "mode": "hash"
+    }
+  },
+  "mp-weixin": {
+    "appid": "",
+    "setting": {
+      "urlCheck": false,
+      "es6": true,
+      "minified": true
+    },
+    "usingComponents": true
+  }
+}

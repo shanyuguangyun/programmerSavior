@@ -1,0 +1,48 @@
+<view class="page">
+  <view class="stats">
+    <view class="stat-card" bindtap="goComments">
+      <text class="stat-num {{unreadCount > 0 ? 'alert' : ''}}">{{unreadCount}}</text>
+      <text class="stat-label">未读评论</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-num">{{todayPv}}</text>
+      <text class="stat-label">今日 PV</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-num">{{todayUv}}</text>
+      <text class="stat-label">今日 UV</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">近 7 天浏览趋势</view>
+    <view class="trend">
+      <view class="trend-col" wx:for="{{trend}}" wx:key="day">
+        <text class="trend-num">{{item.pv}}</text>
+        <view class="trend-bar-wrap">
+          <view class="trend-bar" style="height: {{item.h}}rpx"></view>
+        </view>
+        <text class="trend-day">{{item.label}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">
+      <text>最新评论</text>
+      <text class="card-link" bindtap="goComments">全部 ›</text>
+    </view>
+    <view class="comment" wx:for="{{latestComments}}" wx:key="id">
+      <view class="comment-head">
+        <text class="comment-author">{{item.author}}</text>
+        <text class="new-badge" wx:if="{{item.isNew}}">NEW</text>
+        <text class="comment-time">{{item.createdAt}}</text>
+      </view>
+      <text class="comment-content">{{item.content}}</text>
+      <text class="comment-post">来自：{{item.postTitle}}</text>
+    </view>
+    <view class="empty" wx:if="{{latestComments.length === 0}}">还没有评论</view>
+  </view>
+
+  <view class="refresh-tip" bindtap="load">下拉或点击刷新数据</view>
+</view>

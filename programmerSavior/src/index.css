@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+/**
+ * 全局字体与基础样式。
+ *
+ * 字体文件位于 src/assets/fonts，已按当前界面的中文字符做子集化；
+ * 以后新增大量中文文案时，需要重新生成字体子集或换成完整字体。
+ */
+
+/* 常规字重，用于正文和说明文字 */
+@font-face {
+  font-family: "Swei Gothic";
+  src: url("./assets/fonts/swei-gothic-medium.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+/* 粗体字重，用于菜单、标题和重点信息 */
+@font-face {
+  font-family: "Swei Gothic";
+  src: url("./assets/fonts/swei-gothic-bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+/* Tailwind 4 主题变量：把圆体放在字体栈第一位 */
+@theme {
+  --font-sans:
+    "Swei Gothic", "Nunito", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* 全局基础样式 */
+@layer base {
+  html {
+    min-width: 320px;
+    color-scheme: light;
+    background-color: #f7f7f5;
+  }
+
+  body {
+    min-width: 320px;
+    min-height: 100vh;
+    margin: 0;
+    color: #18181b;
+    background-color: #f7f7f5;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* 表单控件默认继承页面字体 */
+  button,
+  input {
+    font: inherit;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  /* 选中文字使用淡紫色，与主色保持一致 */
+  ::selection {
+    color: #18181b;
+    background: #ede9fe;
+  }
+}
+
+/* 保证 React 根节点至少铺满一屏 */
+#root {
+  min-height: 100vh;
+}

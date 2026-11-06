@@ -1,0 +1,1155 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Spring 基础知识：IoC、DI、Bean、AOP、Spring MVC、事务、Spring Boot 与常见问题。"
+    />
+    <title>Spring 基础知识</title>
+    <style>
+      :root {
+        --bg: #f6f5f1;
+        --surface: #ffffff;
+        --ink: #1f1d26;
+        --muted: #65616d;
+        --line: #e4e1da;
+        --accent: #6d4aff;
+        --accent-dark: #5736df;
+        --accent-soft: #f0edff;
+        --code-bg: #1d1a2b;
+        --code-text: #ece8ff;
+        --warn-bg: #fff8e8;
+        --warn-line: #e7b94f;
+        --note-bg: #f3f8ff;
+        --note-line: #8ab6ee;
+        --shadow: 0 18px 48px -30px rgba(31, 29, 38, 0.28);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        overflow-x: hidden;
+        font-family:
+          "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+          "Noto Sans SC", sans-serif;
+        font-size: 15px;
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      a:hover {
+        color: var(--accent-dark);
+        text-decoration: underline;
+      }
+
+      .hero {
+        background: var(--surface);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .hero-inner {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 58px 32px 44px;
+      }
+
+      .eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--accent);
+        font-size: 11px;
+        font-weight: 750;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        width: 28px;
+        height: 2px;
+        content: "";
+        background: var(--accent);
+        border-radius: 999px;
+      }
+
+      h1 {
+        max-width: 780px;
+        margin: 16px 0 14px;
+        font-size: clamp(38px, 5.5vw, 62px);
+        line-height: 1.08;
+        letter-spacing: -0.055em;
+      }
+
+      .lead {
+        max-width: 760px;
+        margin: 0;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.85;
+      }
+
+      .hero-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 24px;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        min-height: 28px;
+        padding: 4px 11px;
+        color: #5f5a6b;
+        font-size: 11px;
+        font-weight: 650;
+        background: #faf9f6;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 218px minmax(0, 1fr);
+        gap: 46px;
+        width: 100%;
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 38px 32px 92px;
+      }
+
+      .toc {
+        position: sticky;
+        top: 22px;
+        align-self: start;
+        padding: 17px;
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(8px);
+      }
+
+      .toc-title {
+        margin: 0 0 10px;
+        color: #8b8694;
+        font-size: 10px;
+        font-weight: 750;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .toc nav {
+        display: grid;
+        gap: 1px;
+      }
+
+      .toc a {
+        display: block;
+        padding: 6px 8px;
+        color: var(--muted);
+        font-size: 12px;
+        border-radius: 7px;
+      }
+
+      .toc a:hover {
+        color: var(--accent);
+        background: var(--accent-soft);
+        text-decoration: none;
+      }
+
+      main {
+        min-width: 0;
+      }
+
+      .section {
+        margin-bottom: 18px;
+        padding: 30px 32px;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        scroll-margin-top: 22px;
+        min-width: 0;
+      }
+
+      .section-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 28px;
+        height: 24px;
+        margin-right: 9px;
+        padding: 0 7px;
+        color: var(--accent);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        background: var(--accent-soft);
+        border-radius: 7px;
+        vertical-align: 4px;
+      }
+
+      h2 {
+        margin: 0 0 14px;
+        font-size: 25px;
+        line-height: 1.3;
+        letter-spacing: -0.03em;
+      }
+
+      h3 {
+        margin: 26px 0 8px;
+        font-size: 16px;
+        line-height: 1.5;
+        letter-spacing: -0.01em;
+      }
+
+      p {
+        margin: 0 0 12px;
+        color: #56525e;
+      }
+
+      ul,
+      ol {
+        margin: 8px 0 14px;
+        padding-left: 22px;
+        color: #56525e;
+      }
+
+      li {
+        margin: 5px 0;
+      }
+
+      strong {
+        color: var(--ink);
+      }
+
+      code {
+        padding: 2px 6px;
+        color: #4f32bd;
+        font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+        font-size: 0.88em;
+        background: #f2efff;
+        border-radius: 5px;
+        overflow-wrap: anywhere;
+      }
+
+      pre {
+        margin: 14px 0 18px;
+        padding: 18px 20px;
+        overflow-x: auto;
+        color: var(--code-text);
+        font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+        font-size: 12.5px;
+        line-height: 1.7;
+        background: var(--code-bg);
+        border-radius: 12px;
+        tab-size: 4;
+      }
+
+      pre code {
+        padding: 0;
+        color: inherit;
+        font-size: inherit;
+        background: transparent;
+        border-radius: 0;
+        overflow-wrap: normal;
+        word-break: normal;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin: 18px 0 10px;
+      }
+
+      .card {
+        padding: 15px 16px;
+        background: #fbfaf7;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+      }
+
+      .card h3 {
+        margin: 0 0 5px;
+        font-size: 14px;
+      }
+
+      .card p {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.7;
+      }
+
+      .flow {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        margin: 16px 0;
+      }
+
+      .flow span {
+        padding: 6px 10px;
+        font-size: 12px;
+        font-weight: 650;
+        background: var(--accent-soft);
+        border: 1px solid #ded6ff;
+        border-radius: 8px;
+      }
+
+      .flow i {
+        color: #a59fae;
+        font-style: normal;
+      }
+
+      .note,
+      .warn {
+        margin: 16px 0;
+        padding: 12px 15px;
+        font-size: 13px;
+        line-height: 1.75;
+        border-left: 3px solid;
+        border-radius: 0 9px 9px 0;
+      }
+
+      .note {
+        background: var(--note-bg);
+        border-color: var(--note-line);
+      }
+
+      .warn {
+        background: var(--warn-bg);
+        border-color: var(--warn-line);
+      }
+
+      .note strong,
+      .warn strong {
+        margin-right: 4px;
+      }
+
+      .table-wrap {
+        margin: 16px 0;
+        overflow-x: auto;
+        border: 1px solid var(--line);
+        border-radius: 11px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12.5px;
+      }
+
+      th,
+      td {
+        padding: 9px 12px;
+        text-align: left;
+        vertical-align: top;
+        border-bottom: 1px solid #efede8;
+      }
+
+      th {
+        color: #7d7887;
+        font-size: 11px;
+        font-weight: 700;
+        background: #fbfaf7;
+        white-space: nowrap;
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      td code {
+        white-space: normal;
+      }
+
+      .checklist {
+        display: grid;
+        gap: 9px;
+        padding: 0;
+        list-style: none;
+      }
+
+      .checklist li {
+        position: relative;
+        padding-left: 24px;
+        margin: 0;
+      }
+
+      .checklist li::before {
+        position: absolute;
+        top: 8px;
+        left: 2px;
+        width: 6px;
+        height: 6px;
+        content: "";
+        background: var(--accent);
+        border-radius: 50%;
+      }
+
+      footer {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 32px 52px;
+        color: #8c8794;
+        font-size: 12px;
+      }
+
+      footer p {
+        color: inherit;
+        font-size: inherit;
+      }
+
+      .top-link {
+        display: inline-block;
+        margin-top: 8px;
+        font-size: 12px;
+      }
+
+      @media (max-width: 920px) {
+        .hero-inner {
+          padding: 42px 22px 34px;
+        }
+
+        .layout {
+          grid-template-columns: 1fr;
+          gap: 20px;
+          padding: 22px 18px 60px;
+        }
+
+        .toc {
+          position: static;
+          padding: 14px;
+        }
+
+        .toc nav {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 3px;
+        }
+
+        .toc a {
+          padding: 4px 7px;
+        }
+
+        .section {
+          padding: 24px 20px;
+          border-radius: 16px;
+        }
+
+        h2 {
+          font-size: 22px;
+        }
+
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        footer {
+          padding: 0 20px 36px;
+        }
+      }
+
+      @media print {
+        body {
+          background: #fff;
+        }
+
+        .toc,
+        .top-link {
+          display: none;
+        }
+
+        .layout {
+          display: block;
+          padding: 0;
+        }
+
+        .hero-inner,
+        .section {
+          max-width: none;
+          padding: 20px 0;
+          border: 0;
+          box-shadow: none;
+        }
+
+        .section {
+          break-inside: avoid;
+        }
+
+        a {
+          color: inherit;
+        }
+      }
+    </style>
+  </head>
+  <body id="top">
+    <header class="hero">
+      <div class="hero-inner">
+        <div class="eyebrow">Spring Basics</div>
+        <h1>Spring 基础知识</h1>
+        <p class="lead">
+          从 IoC 容器、依赖注入和 Bean 生命周期，到 AOP、Spring MVC、事务与 Spring Boot。
+          这一页用尽量短的篇幅串起最常用的核心概念，适合作为入门笔记和面试前速查。
+        </p>
+        <div class="hero-meta">
+          <span class="pill">Java 8+</span>
+          <span class="pill">Spring Framework</span>
+          <span class="pill">Spring Boot</span>
+          <span class="pill">IoC / DI / AOP</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="toc" aria-label="目录">
+        <p class="toc-title">Contents</p>
+        <nav>
+          <a href="#overview">01 · 整体认识</a>
+          <a href="#ioc">02 · IoC 与 DI</a>
+          <a href="#bean">03 · Bean 与注解</a>
+          <a href="#lifecycle">04 · 生命周期</a>
+          <a href="#config">05 · 配置与 Profile</a>
+          <a href="#aop">06 · AOP</a>
+          <a href="#mvc">07 · Spring MVC</a>
+          <a href="#data">08 · 数据访问与事务</a>
+          <a href="#boot">09 · Spring Boot</a>
+          <a href="#test">10 · 测试</a>
+          <a href="#pitfalls">11 · 常见坑</a>
+          <a href="#path">12 · 学习路径</a>
+        </nav>
+      </aside>
+
+      <main>
+        <section class="section" id="overview">
+          <h2><span class="section-number">01</span>先建立整体认识</h2>
+          <p>
+            Spring 不是某一个单独的功能，而是一套围绕 Java 对象和基础设施的生态。
+            它最核心的价值是：<strong>帮你管理对象、组织依赖、统一处理横切逻辑，并简化 Web 和数据访问。</strong>
+          </p>
+
+          <div class="grid">
+            <div class="card">
+              <h3>IoC 容器</h3>
+              <p>创建、组装和管理 Bean，让对象不再到处 new。</p>
+            </div>
+            <div class="card">
+              <h3>AOP</h3>
+              <p>把日志、事务、权限等横切逻辑从业务代码中抽离。</p>
+            </div>
+            <div class="card">
+              <h3>数据访问</h3>
+              <p>JdbcTemplate、MyBatis、JPA 等统一接入数据库。</p>
+            </div>
+            <div class="card">
+              <h3>Spring MVC</h3>
+              <p>把 HTTP 请求映射到 Controller 方法并返回 JSON。</p>
+            </div>
+            <div class="card">
+              <h3>测试支持</h3>
+              <p>提供 Spring 上下文、MockMvc 等测试基础设施。</p>
+            </div>
+            <div class="card">
+              <h3>Spring Boot</h3>
+              <p>在 Spring 之上做自动配置、Starter 和内嵌服务器。</p>
+            </div>
+          </div>
+
+          <div class="note">
+            <strong>先分清：</strong>Spring Framework 是核心框架；Spring Boot
+            是构建 Spring 应用的方式，它并没有替代 Spring。日常说“写 Spring
+            项目”，通常指的是 Spring Boot + Spring MVC + 数据访问框架。
+          </div>
+        </section>
+
+        <section class="section" id="ioc">
+          <h2><span class="section-number">02</span>IoC 与 DI：对象交给容器管理</h2>
+          <p>
+            <strong>IoC（控制反转）</strong>指对象的创建和依赖装配交给 Spring
+            容器，而不是业务代码自己 new。 <strong>DI（依赖注入）</strong>是实现
+            IoC 的方式：容器把依赖对象传进来。
+          </p>
+
+          <h3>推荐写法：构造器注入</h3>
+          <pre><code>@Service
+public class AuthService {
+
+    private final PsAccountMapper accountMapper;
+
+    public AuthService(PsAccountMapper accountMapper) {
+        this.accountMapper = accountMapper;
+    }
+}</code></pre>
+
+          <p>
+            当类只有一个构造器时，Spring 4.3+ 会自动注入，不需要额外写
+            <code>@Autowired</code>。依赖声明为 <code>final</code>，对象创建后不会被替换，
+            更容易测试，也能避免空指针。
+          </p>
+
+          <h3>三种注入方式</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>方式</th>
+                  <th>特点</th>
+                  <th>建议</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>构造器注入</td>
+                  <td>依赖不可变，启动时就能发现缺失依赖</td>
+                  <td>首选</td>
+                </tr>
+                <tr>
+                  <td>Setter 注入</td>
+                  <td>适合可选依赖，但对象可能处于不完整状态</td>
+                  <td>谨慎使用</td>
+                </tr>
+                <tr>
+                  <td>字段注入</td>
+                  <td>写法短，但隐藏依赖，单元测试不方便</td>
+                  <td>尽量不用</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>ApplicationContext</h3>
+          <p>
+            <code>ApplicationContext</code> 是 Spring 的应用上下文，负责启动容器、加载 Bean
+            定义、完成依赖注入，并提供事件、国际化、资源加载等能力。Spring Boot 启动时，
+            本质上也是在创建并刷新一个应用上下文。
+          </p>
+        </section>
+
+        <section class="section" id="bean">
+          <h2><span class="section-number">03</span>Bean 与常用注解</h2>
+          <p>
+            Bean 是由 Spring 容器创建和管理的对象。最常用的声明方式有两种：
+            在类上使用组件注解，或者在配置类里使用 <code>@Bean</code> 方法。
+          </p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>注解</th>
+                  <th>用途</th>
+                  <th>备注</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>@Component</code></td>
+                  <td>通用组件</td>
+                  <td>其他 stereotype 注解的基础</td>
+                </tr>
+                <tr>
+                  <td><code>@Service</code></td>
+                  <td>业务层</td>
+                  <td>语义化，本质仍是组件</td>
+                </tr>
+                <tr>
+                  <td><code>@Repository</code></td>
+                  <td>数据访问层</td>
+                  <td>可参与持久层异常转换</td>
+                </tr>
+                <tr>
+                  <td><code>@Controller</code></td>
+                  <td>Web 控制器</td>
+                  <td>通常返回视图</td>
+                </tr>
+                <tr>
+                  <td><code>@RestController</code></td>
+                  <td>REST 控制器</td>
+                  <td><code>@Controller + @ResponseBody</code></td>
+                </tr>
+                <tr>
+                  <td><code>@Configuration</code></td>
+                  <td>配置类</td>
+                  <td>可以声明多个 <code>@Bean</code></td>
+                </tr>
+                <tr>
+                  <td><code>@Bean</code></td>
+                  <td>声明 Bean</td>
+                  <td>适合第三方类或需要手动装配的对象</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>@Configuration 与 @Bean</h3>
+          <pre><code>@Configuration
+public class AppConfig {
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}</code></pre>
+
+          <p>
+            组件扫描默认从启动类所在包向下查找。启动类放在
+            <code>com.example</code>，那么 <code>com.example.service</code> 会被扫描；
+            放到别的包则不会，除非手动配置扫描范围。
+          </p>
+        </section>
+
+        <section class="section" id="lifecycle">
+          <h2><span class="section-number">04</span>Bean 生命周期与作用域</h2>
+          <p>可以把单例 Bean 的生命周期简化成下面几个阶段：</p>
+          <div class="flow" aria-label="Bean 生命周期">
+            <span>实例化</span><i>→</i>
+            <span>依赖注入</span><i>→</i>
+            <span>初始化前</span><i>→</i>
+            <span>@PostConstruct</span><i>→</i>
+            <span>使用</span><i>→</i>
+            <span>@PreDestroy</span>
+          </div>
+
+          <pre><code>@Component
+public class CacheWarmer {
+
+    @PostConstruct
+    public void init() {
+        // 容器完成依赖注入后执行
+    }
+
+    @PreDestroy
+    public void destroy() {
+        // 容器关闭 / Bean 销毁前执行
+    }
+}</code></pre>
+
+          <h3>作用域</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>作用域</th>
+                  <th>说明</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>singleton</code></td>
+                  <td>默认值，一个容器内只有一个实例</td>
+                </tr>
+                <tr>
+                  <td><code>prototype</code></td>
+                  <td>每次获取都创建新实例，容器不负责销毁</td>
+                </tr>
+                <tr>
+                  <td><code>request</code></td>
+                  <td>每个 HTTP 请求一个实例，仅 Web 环境</td>
+                </tr>
+                <tr>
+                  <td><code>session</code></td>
+                  <td>每个 HTTP Session 一个实例，仅 Web 环境</td>
+                </tr>
+                <tr>
+                  <td><code>application</code></td>
+                  <td>整个 ServletContext 生命周期一个实例</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="warn">
+            <strong>注意：</strong>单例 Bean 默认会被多个线程共享。尽量不要在单例 Bean
+            里保存可变请求状态，把请求数据放在方法局部变量或参数里，避免线程安全问题。
+          </div>
+        </section>
+
+        <section class="section" id="config">
+          <h2><span class="section-number">05</span>配置与 Profile</h2>
+          <p>
+            Spring Boot 通常使用 <code>application.yml</code> 或
+            <code>application.properties</code>。简单值可以用 <code>@Value</code>，
+            一组结构化配置更适合 <code>@ConfigurationProperties</code>。
+          </p>
+
+          <pre><code>app:
+  upload:
+    max-size-mb: 2
+    allowed-extensions:
+      - html
+      - htm</code></pre>
+
+          <pre><code>@ConfigurationProperties(prefix = "app.upload")
+public class UploadProperties {
+
+    private int maxSizeMb = 2;
+    private List&lt;String&gt; allowedExtensions = new ArrayList&lt;&gt;();
+
+    // getter / setter
+}</code></pre>
+
+          <p>
+            还需要让 Spring 发现这个配置类，例如加上 <code>@Component</code>，
+            或在启动类使用 <code>@EnableConfigurationProperties</code> /
+            <code>@ConfigurationPropertiesScan</code>。
+          </p>
+
+          <h3>Profile</h3>
+          <p>
+            用 <code>spring.profiles.active</code> 或环境变量切换配置，例如
+            <code>application-dev.yml</code>、<code>application-prod.yml</code>。
+            常见做法是通过环境变量覆盖数据库账号、密码等敏感配置，不要把生产密码提交到仓库。
+          </p>
+
+          <div class="note">
+            <strong>配置优先级：</strong>不需要背完整顺序，先记住“外部配置通常优先于打包进
+            jar 的配置”。命令行参数和环境变量适合部署时覆盖，本地默认值放在
+            <code>application.yml</code>。
+          </div>
+        </section>
+
+        <section class="section" id="aop">
+          <h2><span class="section-number">06</span>AOP：横切逻辑抽出来</h2>
+          <p>
+            AOP（面向切面编程）用来处理日志、事务、权限、性能统计这类分散在多个方法里的
+            公共逻辑。Spring AOP 基于代理实现，常见的是 JDK 动态代理或 CGLIB 代理。
+          </p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>概念</th>
+                  <th>含义</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>切面 Aspect</td>
+                  <td>横切逻辑的模块，例如日志切面</td>
+                </tr>
+                <tr>
+                  <td>连接点 Join Point</td>
+                  <td>程序执行过程中可以插入逻辑的点</td>
+                </tr>
+                <tr>
+                  <td>切点 Pointcut</td>
+                  <td>匹配哪些连接点，例如某个包下的所有方法</td>
+                </tr>
+                <tr>
+                  <td>通知 Advice</td>
+                  <td>在切点前后执行的动作，如 Before、Around</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <pre><code>@Aspect
+@Component
+public class LogAspect {
+
+    @Around("execution(* com.example.service..*(..))")
+    public Object log(ProceedingJoinPoint joinPoint) throws Throwable {
+        long start = System.currentTimeMillis();
+        try {
+            return joinPoint.proceed();
+        } finally {
+            long cost = System.currentTimeMillis() - start;
+            System.out.println(joinPoint.getSignature() + " cost=" + cost + "ms");
+        }
+    }
+}</code></pre>
+
+          <div class="warn">
+            <strong>代理自调用：</strong>同一个类里 <code>this.methodB()</code> 调用
+            <code>methodB()</code>，不会再次经过 Spring 代理，因此
+            <code>@Transactional</code>、自定义 AOP 等可能失效。把方法拆到另一个 Bean，
+            或通过代理对象调用。
+          </div>
+        </section>
+
+        <section class="section" id="mvc">
+          <h2><span class="section-number">07</span>Spring MVC 与 REST</h2>
+          <p>一次典型的 HTTP 请求会经过下面这条链路：</p>
+          <div class="flow" aria-label="请求链路">
+            <span>浏览器</span><i>→</i>
+            <span>DispatcherServlet</span><i>→</i>
+            <span>HandlerMapping</span><i>→</i>
+            <span>Controller</span><i>→</i>
+            <span>Service</span><i>→</i>
+            <span>Repository</span><i>→</i>
+            <span>数据库</span>
+          </div>
+
+          <p>
+            <code>DispatcherServlet</code> 是前端控制器，负责把请求分发给对应的
+            Handler。<code>@RestController</code> 的返回值会经过消息转换器序列化成 JSON。
+          </p>
+
+          <pre><code>@RestController
+@RequestMapping("/api/posts")
+public class PostController {
+
+    private final PostService postService;
+
+    public PostController(PostService postService) {
+        this.postService = postService;
+    }
+
+    @GetMapping
+    public List&lt;Post&gt; list(@RequestParam String path) {
+        return postService.listByPath(path);
+    }
+
+    @GetMapping("/{id}")
+    public Post detail(@PathVariable Long id) {
+        return postService.findById(id);
+    }
+}</code></pre>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>注解</th>
+                  <th>用途</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>@RequestMapping</code></td>
+                  <td>类或方法的通用路径前缀</td>
+                </tr>
+                <tr>
+                  <td><code>@GetMapping</code></td>
+                  <td>GET 请求映射</td>
+                </tr>
+                <tr>
+                  <td><code>@PostMapping</code></td>
+                  <td>POST 请求映射</td>
+                </tr>
+                <tr>
+                  <td><code>@RequestParam</code></td>
+                  <td>读取查询参数或表单字段</td>
+                </tr>
+                <tr>
+                  <td><code>@PathVariable</code></td>
+                  <td>读取路径中的变量</td>
+                </tr>
+                <tr>
+                  <td><code>@RequestBody</code></td>
+                  <td>把 JSON 请求体反序列化成对象</td>
+                </tr>
+                <tr>
+                  <td><code>@ResponseBody</code></td>
+                  <td>把返回值写入响应体</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="note">
+            <strong>参数校验：</strong>在 DTO 上使用 <code>@NotBlank</code>、
+            <code>@Size</code> 等约束，并在 Controller 参数上加
+            <code>@Valid</code>。配合全局异常处理，可以统一返回 400。
+          </div>
+        </section>
+
+        <section class="section" id="data">
+          <h2><span class="section-number">08</span>数据访问与事务</h2>
+          <p>
+            Spring 支持多种数据访问方式：<code>JdbcTemplate</code>、MyBatis、
+            JPA / Hibernate 等。无论选择哪种，通常都会分成 Controller → Service →
+            Mapper / Repository 三层。
+          </p>
+
+          <h3>@Transactional</h3>
+          <pre><code>@Service
+public class PostService {
+
+    @Transactional
+    public void createPost(Post post) {
+        postMapper.insert(post);
+        // 同一事务内继续写其他表
+    }
+
+    @Transactional(readOnly = true)
+    public List&lt;Post&gt; list() {
+        return postMapper.selectList(null);
+    }
+}</code></pre>
+
+          <ul>
+            <li>默认只对 <strong>运行时异常和 Error</strong> 回滚；受检异常需要配置 <code>rollbackFor</code>。</li>
+            <li>方法被外部 Bean 调用时事务代理才会介入；同类自调用会绕过代理。</li>
+            <li>事务方法通常应是 <code>public</code>，不要吞掉异常后继续返回成功。</li>
+            <li>查询可以加 <code>readOnly = true</code>，表达只读意图，部分驱动会据此优化。</li>
+          </ul>
+
+          <div class="warn">
+            <strong>常见错误：</strong>业务代码里 catch 了异常却没有重新抛出，事务管理器认为方法正常结束，
+            于是不会回滚。要么不 catch，要么处理完后抛出运行时异常或调用
+            <code>TransactionAspectSupport.currentTransactionStatus().setRollbackOnly()</code>。
+          </div>
+        </section>
+
+        <section class="section" id="boot">
+          <h2><span class="section-number">09</span>Spring Boot：约定优于配置</h2>
+          <p>
+            Spring Boot 的核心目标是让 Spring 应用更容易启动。它提供 Starter 依赖、
+            自动配置、外部化配置和内嵌 Web 服务器。
+          </p>
+
+          <pre><code>@SpringBootApplication
+public class Application {
+
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}</code></pre>
+
+          <p><code>@SpringBootApplication</code> 可以理解为三个注解的组合：</p>
+          <ul>
+            <li><code>@SpringBootConfiguration</code>：标记配置类。</li>
+            <li><code>@EnableAutoConfiguration</code>：根据 classpath 自动装配。</li>
+            <li><code>@ComponentScan</code>：扫描当前包及子包。</li>
+          </ul>
+
+          <h3>Starter</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Starter</th>
+                  <th>用途</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>spring-boot-starter-web</code></td>
+                  <td>Spring MVC、JSON、内嵌 Tomcat</td>
+                </tr>
+                <tr>
+                  <td><code>spring-boot-starter-validation</code></td>
+                  <td>Bean Validation 参数校验</td>
+                </tr>
+                <tr>
+                  <td><code>spring-boot-starter-test</code></td>
+                  <td>JUnit、Mockito、AssertJ、Spring Test</td>
+                </tr>
+                <tr>
+                  <td><code>spring-boot-starter-data-jpa</code></td>
+                  <td>JPA / Hibernate 数据访问</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            启动类默认会扫描自己所在包和子包。把启动类放在项目根包下，是避免
+            “Bean 找不到”的最简单方式。
+          </p>
+        </section>
+
+        <section class="section" id="test">
+          <h2><span class="section-number">10</span>测试</h2>
+          <p>
+            Spring Boot 测试通常分两层：只测 Web 层，或者启动完整应用上下文。
+          </p>
+
+          <pre><code>@SpringBootTest
+class AuthServiceTest {
+
+    @Autowired
+    private AuthService authService;
+
+    @Test
+    void shouldLoginWithCorrectPassword() {
+        // 这里通常会配合 Mock 或测试数据库
+    }
+}</code></pre>
+
+          <pre><code>@WebMvcTest(PostController.class)
+class PostControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+}</code></pre>
+
+          <ul>
+            <li><code>@SpringBootTest</code>：启动完整上下文，适合集成测试，速度较慢。</li>
+            <li><code>@WebMvcTest</code>：只加载 MVC 相关组件，适合 Controller 测试。</li>
+            <li><code>MockMvc</code>：不启动真实 HTTP 端口，也能验证路由、状态码和 JSON。</li>
+            <li>依赖替换可以使用 Mockito；不同 Spring Boot 版本推荐的 mock 注解略有差异。</li>
+          </ul>
+        </section>
+
+        <section class="section" id="pitfalls">
+          <h2><span class="section-number">11</span>新手最容易踩的坑</h2>
+          <ul class="checklist">
+            <li><strong>启动类位置太深：</strong>组件扫描只覆盖当前包及子包。</li>
+            <li><strong>字段注入滥用：</strong>依赖不清晰，单元测试困难，优先构造器注入。</li>
+            <li><strong>同类自调用：</strong>AOP 和事务代理不生效，方法要跨 Bean 调用。</li>
+            <li><strong>吞异常：</strong><code>@Transactional</code> 默认不会因为被 catch 的异常而回滚。</li>
+            <li><strong>单例保存请求状态：</strong>多线程会互相覆盖，保持 Bean 无状态。</li>
+            <li><strong>循环依赖：</strong>先检查职责划分，不要只靠延迟注入掩盖设计问题。</li>
+            <li><strong>把配置写死：</strong>数据库地址、密码等应使用环境变量或外部配置。</li>
+            <li><strong>认为 Spring Boot 等于 Spring：</strong>Boot 只是自动配置和启动方式。</li>
+          </ul>
+        </section>
+
+        <section class="section" id="path">
+          <h2><span class="section-number">12</span>建议的学习顺序</h2>
+          <ol>
+            <li>先理解 IoC / DI，能手写一个构造器注入的 Service。</li>
+            <li>再学 Bean 声明、扫描范围、生命周期和作用域。</li>
+            <li>掌握 Spring MVC 的请求映射、参数绑定和统一异常处理。</li>
+            <li>接一个数据库，理解 Mapper / Repository、事务和连接池。</li>
+            <li>学习 AOP，知道事务和日志为什么能自动生效。</li>
+            <li>最后用 Spring Boot 把配置、Starter、测试和部署串起来。</li>
+          </ol>
+
+          <div class="note">
+            <strong>一句话总结：</strong>Spring 帮你管理对象和基础设施，Spring Boot
+            帮你更快地启动和配置 Spring。先把 IoC、MVC、事务这三条线走通，其他模块都是在此基础上扩展。
+          </div>
+
+          <a class="top-link" href="#top">回到顶部 ↑</a>
+        </section>
+      </main>
+    </div>
+
+    <footer>
+      <p>
+        参考方向：Spring Framework 与 Spring Boot 官方文档。示例代码用于说明概念，
+        实际项目请结合所用版本、依赖和团队规范调整。
+      </p>
+      <p>
+        <a href="https://spring.io/projects/spring-framework" target="_blank" rel="noreferrer">Spring Framework</a>
+        <span> · </span>
+        <a href="https://spring.io/projects/spring-boot" target="_blank" rel="noreferrer">Spring Boot</a>
+        <span> · </span>
+        <a href="https://docs.spring.io/spring-framework/reference/" target="_blank" rel="noreferrer">Framework Docs</a>
+      </p>
+    </footer>
+  </body>
+</html>

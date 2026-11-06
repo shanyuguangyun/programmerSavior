@@ -1,0 +1,26 @@
+<view class="page">
+  <view class="tabs">
+    <view class="tab {{tab === 'unread' ? 'active' : ''}}" data-tab="unread" bindtap="switchTab">
+      未读{{unreadCount > 0 ? ' ' + unreadCount : ''}}
+    </view>
+    <view class="tab {{tab === 'all' ? 'active' : ''}}" data-tab="all" bindtap="switchTab">全部</view>
+    <view class="mark-all" wx:if="{{unreadCount > 0}}" bindtap="markAll">全部已读</view>
+  </view>
+
+  <view class="card" wx:for="{{filtered}}" wx:key="id">
+    <view class="head">
+      <view class="avatar">{{item.author}}</view>
+      <text class="author">{{item.author}}</text>
+      <text class="new-badge" wx:if="{{item.isNew}}">NEW</text>
+      <text class="time">{{item.createdAt}}</text>
+    </view>
+    <text class="content">{{item.content}}</text>
+    <text class="post">来自：{{item.postTitle}}</text>
+    <view class="actions">
+      <view class="action action-primary" wx:if="{{item.isNew}}" data-id="{{item.id}}" bindtap="markOne">标记已读</view>
+      <view class="action" bindtap="reply">回复</view>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{filtered.length === 0}}">没有{{tab === 'unread' ? '未读' : ''}}评论了 🎉</view>
+</view>

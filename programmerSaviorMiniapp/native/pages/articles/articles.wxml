@@ -1,0 +1,22 @@
+<view class="page">
+  <view class="summary">
+    <text class="summary-num">{{totalViews}}</text>
+    <text class="summary-label">近 7 天总浏览</text>
+  </view>
+
+  <view class="card" wx:for="{{articles}}" wx:key="id">
+    <view class="head">
+      <text class="title">{{item.title}}</text>
+      <text class="rank rank-{{item.rank}}" wx:if="{{item.rank <= 3}}">{{item.rank}}</text>
+    </view>
+    <view class="bar-wrap">
+      <view class="bar" style="width: {{item.width}}%"></view>
+    </view>
+    <view class="meta">
+      <text>近 7 天 {{item.views7d}} 次浏览</text>
+      <text>{{item.comments}} 条评论</text>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{articles.length === 0 && !loading}}">还没有文章</view>
+</view>

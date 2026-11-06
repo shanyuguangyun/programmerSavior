@@ -1,0 +1,25 @@
+{
+  "description": "码农自救 · 管理端小程序",
+  "compileType": "miniprogram",
+  "appid": "touristappid",
+  "projectname": "programmer-savior-admin",
+  "libVersion": "3.0.0",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": false,
+    "newFeature": true,
+    "bigPackageSizeSupport": true
+  },
+  "packOptions": {
+    "ignore": []
+  },
+  "condition": {
+    "miniprogram": {
+      "current": -1,
+      "list": []
+    }
+  }
+}
